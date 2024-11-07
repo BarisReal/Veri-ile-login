@@ -1,51 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
- <style>
-	div {
-		background-color: blue;
-		transition: background-color 2s; /* Arka plan rengi geçiş süresi */
-	}
-	div:hover {
-		background-color: rgba(255, 0, 0, 1); /* Koyu kırmızı */
-	}
-	#siyah {
-		color: black;
-	}
-	div {
-		margin: auto;
-		margin-top: 20px;
-		height: auto;
-		width: 500px;
-		color: white;
-		border: 2px solid black;
-		padding: 25px;
-		background: lightskyblue;
-	}
- </style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Giriş Kontrol</title>
+	<style>
+		div {
+			margin: auto;
+			margin-top: 20px;
+			height: auto;
+			width: 500px;
+			color: red;
+			border: 2px solid red;
+			padding: 25px;
+			text-align: center;
+			margin-left: 10px;
+		}
+		.bosGiris {
+			border: 2px solid orange;
+			color: orange;
+		}
+		.dogruGiris {
+			border: 2px solid green;
+			color: green;
+			background-image: linear-gradient(-90deg, red, blue);
+		}
+	</style>
 </head>
 <body bgcolor="black">
-<div id="box">
- <form action="girisKontrol.php" name="Kontrol" method="post">
-  <h3 align="center">Yönetim Sisteme Giriş</h3>
-  <table cellpadding="5px" width="450px">
-   <tr>
-    <td>Kullanıcı Adınız:</td>
-    <td><input type="text" name="kAdi" maxlength="11" class="form-control" placeholder="Kullanıcı Adınızı Giriniz"></td>
-   </tr>
-   <tr>
-    <td>Şifreniz:</td>
-    <td><input type="password" name="sifre" class="form-control" placeholder="Şifrenizi Giriniz"></td>
-   </tr>
-   <tr>
-    <td colspan="2"><input type="submit" value="Giriş için tıklayınız" style="width: 450px; color: white;" class="btn btn-outline-primary"></td>
-   </tr>
-  </table>
- </form>
-</div>
+<?php
+$yonetim = array(
+	array("ad" => "BarisReal", "sifre" => "@log123"),
+	array("ad" => "BarisDeneme", "sifre" => "@log123"),
+	array("ad" => "BarisFake", "sifre" => "@log123"),
+	array("ad" => "BarisOrnek", "sifre" => "@log123"),
+);
+
+$kullanici = $_POST["kAdi"];
+$sifre = $_POST["sifre"];
+
+if (empty($kullanici) || empty($sifre)) {
+	echo "<div class='bosGiris'><h2>Bilgileriniz eksiktir. <br>Giriş sayfasına yönlendiriliyorsunuz.</h2></div>";
+	header("Refresh: 5; url=login.php");
+	exit;
+} else {
+	$indis = -1;
+	for ($i = 0; $i < count($yonetim); $i++) {
+		if ($yonetim[$i]["ad"] == $kullanici && $yonetim[$i]["sifre"] == $sifre) {
+			$indis = $i;
+			break;
+		}
+	}
+	if ($indis == -1) {
+		echo "<div><h2>Sistemde Kaydınız bulunmamaktadır.<br>Giriş sayfasına yönlendiriliyorsunuz.</h2></div>";
+		header("Refresh: 5; url=login.php");
+		exit;
+	} else {
+		echo "<div class='dogruGiris'><h2>Merhaba " . $yonetim[$indis]["ad"] . ",<br>Sisteme Girişiniz Başarıyla Gerçekleşmiştir.</h2></div>";
+	}
+}
+?>
 </body>
 </html>
